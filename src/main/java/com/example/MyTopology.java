@@ -39,10 +39,17 @@ public class MyTopology extends ConfigurableTopology {
 
     @Override
     protected int run(String[] args) throws Exception {
+        // Create a TopologyBuilder
         TopologyBuilder builder = new TopologyBuilder();
+
+        // Create a Spout
         builder.setSpout("mySpout", new MySpout(), 5);
+
+        // Create Bolts
         builder.setBolt("myBolt1", new MyBolt1(), 8).shuffleGrouping("mySpout");
         builder.setBolt("myBolt2", new MyBolt2(), 12).fieldsGrouping("myBolt1", new Fields("doubleNumber"));
+
+        // Configure and submit the topology
         conf.setDebug(true);
         String topologyName = "myTopology";
         conf.setNumWorkers(3);
@@ -52,3 +59,43 @@ public class MyTopology extends ConfigurableTopology {
         return submit(topologyName, conf, builder);
     }    
 }
+
+/*
+ * 1. Create a TopologyBuilder
+ * 2. Create a Spout
+ * 3. Create Bolts
+ * 4. Configure and submit the topology
+ */
+
+ /*
+ * what does this code do? 
+ *  - it creates a spout that emits a random number between 0 and 100
+ * - it creates a bolt that receives the random number and doubles it
+ * - it creates a bolt that receives the doubled number and prints it
+ * 
+ * what is the topology?
+ * - spout -> bolt1 -> bolt2
+ * 
+ * what is the topology name?
+ * - MyTopology
+ * 
+ * what is a spout?
+ * - a spout is a source of data
+ * 
+ * what is the spout name?
+ * - MySpout
+ * 
+ * what is a bolt?
+ * - a bolt is a processing unit
+ * 
+ * what is the bolt name?
+ * - MyBolt1
+ * - MyBolt2
+ * 
+ * what is the stream name?
+ * - default
+ * 
+ * what is the field name?
+ * - number
+ * - doubleNumber
+ */
